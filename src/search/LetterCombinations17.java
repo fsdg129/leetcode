@@ -1,5 +1,6 @@
 package search;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,33 @@ public class LetterCombinations17 {
     	}
     	
     	return result;
+    	
+    }
+    
+    public List<String> letterCombinationsDFS(String digits) {
+        
+    	if(digits.length() == 0) {
+    		return List.of();
+    	}
+    	
+    	List<String> result = new ArrayList<>();
+    	generateNextChar("", digits, 0, result);
+    	
+    	return result;
+    }
+    
+    private static void generateNextChar(String letter, String digits, int index, List<String> result) {
+    	
+    	if(index == digits.length()) {
+    		result.add(letter);
+    		return;
+    	}
+    	
+    	for(String character : digitMap.get( String.valueOf(digits.charAt(index)) )) {    		
+    		generateNextChar(letter + character, digits, index + 1, result);
+    	}
+    	
+    	return;
     	
     }
 }
