@@ -6,10 +6,45 @@ import java.util.Set;
 
 public class PartitionEqualSubsetSum416 {
 
-	private String name = "303. Range Sum Query - Immutable";
-	private String url = "https://leetcode.com/problems/range-sum-query-immutable/";
+	private String name = "416. Partition Equal Subset Sum";
+	private String url = "https://leetcode.com/problems/partition-equal-subset-sum/";
 	
     public boolean canPartition(int[] nums) {
+    	
+    	if(nums.length == 0) {
+    		return true;
+    	}    	
+    	int sum = Arrays.stream(nums).sum();    	
+    	if(sum % 2 != 0) {
+    		return false;
+    	}
+    	
+    	int target = sum / 2;    	
+    	//Use 1, 2, ..., j numbers, could we fill a buscket of with target weight?
+    	//Every number could be used 0 or 1 time
+        boolean[][] isFull = new boolean[nums.length + 1][target + 1];
+        for(int i = 0; i <= nums.length; i++) {
+        	for(int j = 0; j <= target; j++) {
+        		if(j == 0) {
+        			isFull[i][j] = true;
+        		} else if(i == 0) {
+        			isFull[i][j] = false;
+        		} else {
+        			if(nums[i - 1] > j) {
+        				isFull[i][j] = isFull[i - 1][j];
+        			} else {
+        				isFull[i][j] = isFull[i - 1][j] || isFull[i - 1][j - nums[i - 1]];
+        			}
+        		}
+        	}
+        }
+        
+        
+        return isFull[nums.length][target];
+    }
+	
+	
+    public boolean canPartitionDFS(int[] nums) {
         
     	if(nums.length == 0) {
     		return true;

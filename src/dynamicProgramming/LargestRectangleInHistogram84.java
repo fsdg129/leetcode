@@ -48,6 +48,5 @@ public class LargestRectangleInHistogram84 {
     	}
     	
     	return maxArea;	
-    		
     }
 }

@@ -58,5 +58,25 @@ class SerializeAndDeserializeBinaryTree297Test {
 		assertEquals(3, node.val);
 		assertEquals(-5, node.right.val);
 	}
+	
+	@Test
+	void testThreeNodes2() {
+		TreeNode root = new TreeNode(5);
+		root.left = new TreeNode(3);
+		root.right = new TreeNode(7);
+		SerializeAndDeserializeBinaryTree297.Codec serializer = new SerializeAndDeserializeBinaryTree297.Codec();
+		String result = serializer.serialize(root);
+		System.out.println(result);
+		//assertEquals("x,5,3,7", result);
+	}
+	
+	@Test
+	void testDeserializeThreeNodes2() {
+		String result = "|5|3|n|n|7|n|n";
+		SerializeAndDeserializeBinaryTree297.Codec serializer = new SerializeAndDeserializeBinaryTree297.Codec();
+		TreeNode node = serializer.deserialize(result);
+		assertEquals(5, node.val);
+		assertEquals(7, node.right.val);
+	}
 
 }
