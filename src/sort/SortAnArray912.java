@@ -1,4 +1,4 @@
-package divideAndConquer;
+package sort;
 
 import java.util.Arrays;
 
