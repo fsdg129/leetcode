@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class LRUCache146 {
 
-	private String name = "206. Reverse Linked List";
-	private String url = "https://leetcode.com/problems/reverse-linked-list/";
+	private String name = "146. LRU Cache";
+	private String url = "https://leetcode.com/problems/lru-cache/";
 	
 	public static void main(String[] args) {
 		
@@ -107,9 +107,8 @@ public class LRUCache146 {
 	        	}
 	        	if(this.size > this.capacity) {
 	        		Node last = this.tail;
-	        		this.tail = last.prev;
-	        		this.tail.next = null;
 	        		this.mapper.remove(last.key);
+	        		this.shrinkTail();	        			        		
 	        		this.size--;
 	        	}
 	        }	        
@@ -136,33 +135,38 @@ public class LRUCache146 {
 	    	return sb.toString();
 	    }
 	    
+	    private void shrinkTail() {
+	    	this.tail = this.tail.prev;
+    		this.tail.next = null;
+	    }
+	    
+	    private static void linkConcatenate(Node pre, Node current) {
+	    	pre.next = current;
+	    	if(current != null)
+	    		current.prev = pre;
+	    	
+	    	return;
+	    }
+	    
 	    private void moveToHead(Node current) {
 	    	if(current.prev == this.root) {
 	    		return;
 	    	}
 	    	if(this.tail == current) {
-	    		this.tail = current.prev;
-	    		this.tail.next = null;
+	    		this.shrinkTail();
 	    	}
 	    	//Fill the gap after the current node was taking out of the linkedlist
-	    	current.prev.next = current.next;
-	    	if(current.next != null)
-	    		current.next.prev = current.prev;
+	    	linkConcatenate(current.prev, current.next);
 	    	this.insertAfterRoot(current);
 	    	
 	    	return;
-	    }
+	    }	    
 	    
 	    //Move the isolated node to the head of the linkedlist
 	    private void insertAfterRoot(Node current) {
-	    	//Fix the setting of the current node
-	    	current.prev = this.root;
-	    	current.next = this.root.next;
-	    	//Fix the setting of the root node
-	    	this.root.next = current;
-	    	//Fix the setting of the previous head
-	    	if(current.next != null)
-	    		current.next.prev = current;
+	    	Node originalFirstNode = this.root.next;
+	    	linkConcatenate(root, current);
+	    	linkConcatenate(current, originalFirstNode);
 	    	
 	    	return;
 	    }
