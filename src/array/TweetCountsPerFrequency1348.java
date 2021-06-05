@@ -1,8 +1,12 @@
 package array;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableSet;
+import java.util.TreeSet;
 
 public class TweetCountsPerFrequency1348 {
 
@@ -11,67 +15,62 @@ public class TweetCountsPerFrequency1348 {
 	
 	public static class TweetCounts {
 
-		private Map<Integer, Map<String, Integer>> minuteMap = new HashMap<>();
-		private Map<Integer, Map<String, Integer>> hourMap = new HashMap<>();
-		private Map<Integer, Map<String, Integer>> dayMap = new HashMap<>();
+		private Map<String, TreeSet<Integer>> minuteMap = new HashMap<>();
+		
+		private List<Integer> tweetCounts = new ArrayList<>();
+		private int counter = 0;
+		private int current;
 		
 	    public TweetCounts() {
 	        
 	    }
 	    
 	    public void recordTweet(String tweetName, int time) {
-	        this.recordTweetMinute(tweetName, time);
-	        this.recordTweetHour(tweetName, time);
-	        this.recordTweetDay(tweetName, time);
+	    	if(!minuteMap.containsKey(tweetName)) {
+	    		minuteMap.put(tweetName, new TreeSet<>());
+	    	}
+	    	minuteMap.get(tweetName).add(time);
 	        
 	        return;
 	    }
 	    
 	    public List<Integer> getTweetCountsPerFrequency(String freq, String tweetName, int startTime, int endTime) {
+	        current = startTime;
+	        int slice = covertFreq(freq);
+	        NavigableSet<Integer> timestamps = minuteMap.get(tweetName).subSet(startTime, true, endTime, true);
+	        Iterator<Integer> iterator = timestamps.iterator();
+	           	        
+	        int eventTime;
+	        while(iterator.hasNext()) {
+	        	eventTime = iterator.next();
+	        	while(eventTime >= current + slice) {
+	        		moveOneSlice(slice);
+	        	}
+	        	counter++;
+	        }
+	        moveOneSlice(slice);
 	        
+	        while(current <= endTime) {
+	        	tweetCounts.add(0);
+	        	current += slice;
+	        }
+	        
+	        return tweetCounts;
 	    }
 	    
-	    private void recordTweetMinute(String tweetName, int time) {
-	    	recordTweetInChunk(tweetName, minuteKey(time), this.minuteMap);
-	    	
-	    	return;
+	    private void moveOneSlice(int slice) {
+    		tweetCounts.add(counter);
+    		counter = 0;
+    		current += slice;
 	    }
 	    
-	    private void recordTweetHour(String tweetName, int time) {
-	    	recordTweetInChunk(tweetName, hourKey(time), this.hourMap);
-	    	
-	    	return;
-	    }
-	    
-	    private void recordTweetDay(String tweetName, int time) {
-	    	recordTweetInChunk(tweetName, dayKey(time), this.dayMap);
-	    	
-	    	return;
-	    }
-	    
-	    private static void recordTweetInChunk(String tweetName, int key, Map<Integer, Map<String, Integer>> totalMap) {
-	    	Map<String, Integer> chunkMap;
-	    	if(totalMap.containsKey(key)) {
-	    		chunkMap = totalMap.get(key);
-	    	} else {
-	    		chunkMap = new HashMap<>();
-	    		totalMap.put(key, chunkMap);
-	    	}
-	    	int count = chunkMap.getOrDefault(tweetName, 0);
-	    	count++;
-	    	chunkMap.put(tweetName, count);
-	    	
-	    	return;
-	    }
-	    
-	    private static int minuteKey(int time) {
-	    	return time / 60;
-	    }
-	    private static int hourKey(int time) {
-	    	return time / 3600;
-	    }
-	    private static int dayKey(int time) {
-	    	return time / 86400;
+	    private static int covertFreq(String freq) {
+	    	if(freq.equals("minute"))
+	    		return 60;
+	    	else if(freq.equals("hour"))
+	    		return 3600;
+	    	else 
+	    		return 86400;
 	    }
 	    
 	}
