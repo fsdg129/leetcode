@@ -6,8 +6,8 @@ import java.util.Set;
 
 public class WordBreak139 {
 
-	private String name = "303. Range Sum Query - Immutable";
-	private String url = "https://leetcode.com/problems/range-sum-query-immutable/";
+	private String name = "139. Word Break";
+	private String url = "https://leetcode.com/problems/word-break/";
 	
     public boolean wordBreak(String s, List<String> wordDict) {
         
