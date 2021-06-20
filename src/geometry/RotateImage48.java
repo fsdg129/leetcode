@@ -1,4 +1,4 @@
-package array;
+package geometry;
 
 public class RotateImage48 {
 
@@ -51,8 +51,8 @@ public class RotateImage48 {
     }
     
     private void rotateIndex(Point p, int length) {
-    	int newRow = length - p.col;
-    	int newCol = p.row;
+    	int newRow = p.col;
+    	int newCol = length -1 - p.row;
     	p.setPointIndex(newRow, newCol);
     }
 }

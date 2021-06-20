@@ -1,12 +1,11 @@
-package array;
+package treeMap;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.NavigableSet;
-import java.util.TreeSet;
+import java.util.TreeMap;
 
 public class TweetCountsPerFrequency1348 {
 
@@ -15,10 +14,10 @@ public class TweetCountsPerFrequency1348 {
 	
 	public static class TweetCounts {
 
-		private Map<String, TreeSet<Integer>> minuteMap = new HashMap<>();
+		private Map<String, TreeMap<Integer, Integer>> minuteMap = new HashMap<>();
 		
-		private List<Integer> tweetCounts = new ArrayList<>();
-		private int counter = 0;
+		private List<Integer> tweetCounts;
+		private int counter;
 		private int current;
 		
 	    public TweetCounts() {
@@ -27,26 +26,35 @@ public class TweetCountsPerFrequency1348 {
 	    
 	    public void recordTweet(String tweetName, int time) {
 	    	if(!minuteMap.containsKey(tweetName)) {
-	    		minuteMap.put(tweetName, new TreeSet<>());
+	    		minuteMap.put(tweetName, new TreeMap<>());
 	    	}
-	    	minuteMap.get(tweetName).add(time);
+	    	if(minuteMap.get(tweetName).containsKey(time)) {
+	    		int number = minuteMap.get(tweetName).get(time);
+	    		number++;
+	    		minuteMap.get(tweetName).put(time, number);
+	    	} else {
+	    		minuteMap.get(tweetName).put(time, 1);
+	    	}
 	        
 	        return;
 	    }
 	    
 	    public List<Integer> getTweetCountsPerFrequency(String freq, String tweetName, int startTime, int endTime) {
+	    	tweetCounts = new ArrayList<>();
+	    	counter = 0;
+	    	
 	        current = startTime;
 	        int slice = covertFreq(freq);
-	        NavigableSet<Integer> timestamps = minuteMap.get(tweetName).subSet(startTime, true, endTime, true);
-	        Iterator<Integer> iterator = timestamps.iterator();
+	        Iterator<Map.Entry<Integer, Integer>> iterator = minuteMap.get(tweetName)
+	        		.subMap(startTime, true, endTime, true).entrySet().iterator();
 	           	        
-	        int eventTime;
+	        Map.Entry<Integer, Integer> eventTime;
 	        while(iterator.hasNext()) {
 	        	eventTime = iterator.next();
-	        	while(eventTime >= current + slice) {
+	        	while(eventTime.getKey() >= current + slice) {
 	        		moveOneSlice(slice);
 	        	}
-	        	counter++;
+	        	counter += eventTime.getValue();
 	        }
 	        moveOneSlice(slice);
 	        

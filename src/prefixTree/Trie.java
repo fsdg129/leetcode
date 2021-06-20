@@ -71,4 +71,3 @@ public class Trie {
     	return word.charAt(index) - 'a';
     }
 }
-;

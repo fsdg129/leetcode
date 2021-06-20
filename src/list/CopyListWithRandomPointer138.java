@@ -5,10 +5,10 @@ import java.util.Map;
 
 public class CopyListWithRandomPointer138 {
 
-	private String name = "937. Reorder Data in Log Files";
-	private String url = "https://leetcode.com/problems/reorder-data-in-log-files/";
+	private String name = "138. Copy List with Random Pointer";
+	private String url = "https://leetcode.com/problems/copy-list-with-random-pointer/";
 	
-    public Node copyRandomList(Node head) {
+    public static Node copyRandomList(Node head) {
     	
     	if(head == null)
     		return null;
@@ -29,6 +29,7 @@ public class CopyListWithRandomPointer138 {
     	while(cur != null) {
     		if(cur.random != null)
     			mapper.get(cur).random = mapper.get(cur.random);
+    		cur = cur.next;
     	}
     	
     	return mapper.get(head);
